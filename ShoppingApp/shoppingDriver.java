@@ -4,7 +4,7 @@ import java.util.*;
 public class shoppingDriver {
 	static List<Customer> customers = new ArrayList<>();
 	//d.	Each Product will have a different price and name assigned to it.
-	// in addition i can add, productType like cosmetics, stationary, blah blah.... and accordingly i can filter
+	// in addition i can add, productType like cosmetics, stationary,.... and accordingly i can filter
 	static List<Product> products = new ArrayList<>();
 	//the below stores all the items you choose to order; just store the productID's
 	static List<Order> checkOutList = new ArrayList<>();
@@ -121,6 +121,38 @@ public class shoppingDriver {
 		return 0.0f;
 	}
 	
+	public static void displayCheckOut(String customerEmail) {
+		System.out.println("\n\n \t\tProductID\t Product Name\t\t\t\t Price\n\n");
+		for(Order o: checkOutList) {
+			if(o.getCustomerEmail().equals(customerEmail)) {
+				System.out.println("\t\t   "+o.getProductID()+"\t"+o.getProductName()+"  "+o.getProductPrice()+"\n");
+			}
+		}
+	}
+	
+	public static float removeProduct(int productID, String customerEmail) {
+		for(Order o: checkOutList) {
+			if(o.getProductID() == productID && o.getCustomerEmail().equals(customerEmail)) {
+				checkOutList.remove(o);
+				System.out.println("Item has been moved out of cart!!");
+				return o.getProductPrice();
+			}
+		}
+		return 0.0f;
+	}
+	
+	public static void cardDetails() {
+		String name;
+		long cardNumber;
+		int CVV;
+		Scanner sc = new Scanner(System.in);
+		System.out.println("Enter the Card Holder Name.");
+		name = sc.next();
+		System.out.println("Enter the Card Number.");
+		cardNumber = sc.nextLong();
+		System.out.println("Enter CVV");
+		CVV = sc.nextInt();
+	}
 	public static void main(String[] args) {
 		int globalCounter = 1, tempProductID; //re-assign the counter as 1 for new user
 		String email = "";
@@ -181,36 +213,36 @@ public class shoppingDriver {
 		}
 		System.out.println("Would you like to proceed with the CheckOut?\n Press y/n as per your choice!!!");
 		char choice = sc.next().charAt(0);
-		if(choice == 'y' || choice == 'Y') {
-			//display the items you bought during checkout
-			//loop over orderList get the productID, loop over products and display their names and prices
-		}
-		else if(choice == 'n' || choice == 'N'){
-			//do you want to remove any prducts from the check out list?
-			//take a y/n
-			//then enter the productID from the checkout list that has to be removed.
-			//addition: at checkout if i want to procced further/ remove any item as that question
-			//for loop productID again; seperate method and do the operation
-			//subtract from totalAmount and delete that from orderList
+		//display the items you bought during checkout; *****method
+		displayCheckOut(email);
+		while(choice == 'n' || choice == 'N'){
+			System.out.println("Do you want to remove any product(s) from your CheckOut list?\\n Press y/n as per your choice!!!");
+			char choiceOfRemoval = sc.next().charAt(0);
+			System.out.println("Enter the productID from the checkout list that has to be removed.");
+			tempProductID = sc.nextInt();
+			totalPrice = totalPrice - removeProduct(tempProductID, email);
+			System.out.println("Would you like to proceed with the CheckOut?\n Press y/n as per your choice!!!");
+			choice = sc.next().charAt(0);
 		}
 		
-		//then proceed to checkout. 
-		//ask yes/no question;
-		
-		//if you checkout.
+		System.out.println("The Total Amount is: Rs."+totalPrice);
 		
 		//check for payment modes
+		System.out.println("Enter the mode of payment.\n1. Cash\n2. Card");
+		int modeOfPayment = sc.nextInt();
+		if(modeOfPayment == 2) {
+			totalPrice = totalPrice * 2;
+			System.out.println("The Total Amount to pay would be: Rs."+totalPrice);
+			cardDetails(); 
+			System.out.println("OTP sent to your registered mobile number. Confirm it.");
+			System.out.println("Payment successfull :)");
+			
+		}
+		else if(modeOfPayment == 1) {
+			System.out.println("Your Total Amount to pay on delivery is: Rs."+totalPrice);
+		}
 		
-		//payment modes: cash or card
-		
-		//card-> double the payment
-		
-		//once, checkout is done shows totalamount
-		
-		//confirm payment? if yes, then procced payment
-		
-		//order confirmed message!
-		
+		System.out.println("Order confirmed !!!");
 		
 		//optional: if you want to logout then, go with login... wala code!
 		System.out.println("Logging you out of your account... Re-run the code for a new login/ to login again!!!");
